@@ -24,7 +24,7 @@ export const signup = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({
         message: "Email is already registered",
-        success: false,
+        success: false
       });
     }
 
@@ -33,8 +33,6 @@ export const signup = async (req, res) => {
 
     const newUser = new User({ username, email, password: hashedpassword });
     await newUser.save();
-
-    // You may generate a JWT token here if needed
 
     res.status(200).json({
       message: "Signup Successful",
