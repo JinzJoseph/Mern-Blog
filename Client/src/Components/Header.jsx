@@ -18,13 +18,13 @@ const Header = () => {
         </span>
         Blog
       </Link>
-      <form>
+      <form className="sm:hidden lg:block ">
         <TextInput
           type="text"
           placeholder="Search..."
           rightIcon={AiOutlineSearch}
-          className="hidden lg:outline"
-        />
+          className="lg:outline-none"
+        ></TextInput>
       </form>
       <Button className="w-12 h-10 lg:hidden" color="gray" pill>
         <AiOutlineSearch />
@@ -52,7 +52,7 @@ const Header = () => {
             </Link>
           </Navbar.Link>
           <Navbar.Link>
-            <Link to="/project" active={path==="/project"} as={'div'}>
+            <Link to="/projects" active={path==="/projects"} as={'div'}>
               Projects
             </Link>
           </Navbar.Link>
