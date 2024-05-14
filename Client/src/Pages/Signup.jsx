@@ -2,6 +2,7 @@ import axios from "axios";
 import { Alert, Button, Label, TextInput } from "flowbite-react";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import OAth from "../Components/OAth";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -87,6 +88,7 @@ const navigate=useNavigate()
             <Button type="submit" disabled={loading}>
               {loading ? "Signing Up..." : "Sign Up"}
             </Button>
+            <OAth/>
           </form>
           <div className="flex gap-2 text-sm mt-3">
             <span>Have an account?</span>

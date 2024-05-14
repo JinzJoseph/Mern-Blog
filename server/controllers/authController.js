@@ -47,7 +47,7 @@ export const signup = async (req, res) => {
   }
 };
 export const signin = async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { email, password } = req.body;
   if (!email || !password || email.trim() === "" || password.trim() === "") {
     res.status(400).json({
@@ -74,6 +74,48 @@ export const signin = async (req, res) => {
       .cookie("access_token", token, { httpOnly: true })
       .status(200)
       .json(rest);
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
+  }
+};
+export const googleAuth = async (req, res) => {
+  // console.log(req.body);
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (user) {
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      const { password, ...rest } = user._doc;
+      res.cookie("access_token", token, { httpOnly: true }).status(200).json({
+        message: "successful",
+        success: true,
+        data: rest,
+      });
+    } else {
+      const generatePassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(generatePassword, salt);
+      const newUser = new User({
+        username:
+          req.body.name.split(" ").join("").toLowerCase() +
+          Math.random().toString(36).slice(-4),
+        email: req.body.email,
+        password: hashedPassword,
+        profilePic: req.body.googlePhoto,
+      });
+      await newUser.save();
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+      const { password, ...rest } = newUser._doc;
+      res.cookie("access_token", token, { httpOnly: true }).status(200).json({
+        message: "successful",
+        success: true,
+        data: rest,
+      });
+    }
   } catch (error) {
     res.status(500).json({
       message: "Internal server error",

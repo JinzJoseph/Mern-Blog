@@ -2,19 +2,26 @@ import axios from "axios";
 import { Alert, Button, Label, TextInput } from "flowbite-react";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import OAth from "../Components/OAth";
+import {useDispatch,useSelector} from "react-redux"
+import {signInStart,
+  signInSuccess,
+  signInFailure,} from "../redux/User/UserSlice"
 const Signin = () => {
-  const [username, setUsername] = useState("");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  // const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState(null);
+  const { loading, error } = useSelector((state) => state.user);
+  const dispatch=useDispatch()
 const navigate=useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      setLoading(true);
+      // setLoading(true);
+      dispatch(signInStart())
       const res = await axios.post(
         "/api/auth/signin",
         {
@@ -28,15 +35,15 @@ const navigate=useNavigate()
       );
       console.log(res);
       if (res.data.success === false) {
-        return setError(data.message);
+        dispatch(signInFailure(data.message))
       }
       setLoading(false);
       if (res.statusText==="OK") {
+        dispatch(signInSuccess(data));
         navigate("/");
       }
     } catch (error) {
-      setLoading(false);
-      setError(error.message);
+      dispatch(signInFailure(error.message));
     }
   };
 
@@ -79,6 +86,7 @@ const navigate=useNavigate()
             <Button type="submit" disabled={loading}>
               {loading ? "Signing Up..." : "Sign in"}
             </Button>
+            <OAth/>
           </form>
           <div className="flex gap-2 text-sm mt-3">
             <span>Dont Have an account?</span>
