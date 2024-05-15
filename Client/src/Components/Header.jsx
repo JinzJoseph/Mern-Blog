@@ -3,10 +3,11 @@ import { Link,useLocation } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon } from "react-icons/fa";
 import { Button, Navbar, TextInput } from "flowbite-react";
-
+import {useSelector} from "react-redux"
 const Header = () => {
   const path = useLocation().pathname;
   const location = useLocation();
+  const {currentUser }=useSelector((state)=>state.user)
   return (
     <Navbar className="border-b-2">
       <Link
@@ -33,11 +34,21 @@ const Header = () => {
         <Button className="w-12 h-10 hidden sm:inline" color="gray" pill>
           <FaMoon />
         </Button>
-        <Link to="/sign-in">
-          <Button className="bg-gradient-to-r from-blue-500 to-green-500 ">
-            Sign In
-          </Button>
-        </Link>
+
+        {
+          currentUser ?(  <img
+            src={currentUser.data.profilePic}
+            alt="profile"
+            className="rounded-full h-10 w-10 object-cover self-center items-center"
+          />):(
+            <Link to="/sign-in">
+            <Button className="bg-gradient-to-r from-blue-500 to-green-500 ">
+              Sign In
+            </Button>
+          </Link >
+          )
+        }
+       
      <Navbar.Toggle/>
       </div>
       <Navbar.Collapse>
