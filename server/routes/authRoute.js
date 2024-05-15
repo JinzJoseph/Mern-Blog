@@ -6,4 +6,5 @@ router.post('/signup',signup)
 
 router.post('/signin',signin)
 router.post("/google",googleAuth)
+router.post('/up')
 export default router;

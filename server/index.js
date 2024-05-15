@@ -1,6 +1,7 @@
 import express from "express";
 import connectDB from "./config/db.js"; // Assuming db.js is located in the config folder
 import authRoute from "./routes/authRoute.js"
+import userRoute from "./routes/userRoute.js";
 import bodyParser from "body-parser";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -16,6 +17,6 @@ app.use(bodyParser.json());
 dotenv.config();
 connectDB();
 
-// app.use("/api/user",userRoute)
+app.use("/api/user",userRoute)
 app.use("/api/auth",authRoute)
 

@@ -46,7 +46,7 @@ const Header = () => {
 
         {currentUser ? (
           <img
-            src={currentUser.profilePic || currentUser.data.profilePic}
+            src={currentUser.profilePic }
             alt="profile"
             className="rounded-full h-10 w-10 object-cover self-center items-center"
           />

@@ -38,6 +38,7 @@ const navigate=useNavigate()
         dispatch(signInFailure(data.message))
       }
       // setLoading(false);
+      // const data=res.data
       if (res.statusText==="OK") {
         dispatch(signInSuccess(res.data));
         navigate("/");
