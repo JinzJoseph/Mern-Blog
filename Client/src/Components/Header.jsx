@@ -1,13 +1,17 @@
 import React from "react";
-import { Link,useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
-import { FaMoon } from "react-icons/fa";
+import { FaMoon, FaSun } from "react-icons/fa";
 import { Button, Navbar, TextInput } from "flowbite-react";
-import {useSelector} from "react-redux"
+import { useDispatch, useSelector } from "react-redux";
+import { toggleTheme } from "../redux/theme/themeSlice";
+
 const Header = () => {
   const path = useLocation().pathname;
   const location = useLocation();
-  const {currentUser }=useSelector((state)=>state.user)
+  const { currentUser } = useSelector((state) => state.user);
+  const { theme } = useSelector((state) => state.theme);
+  const dispatch = useDispatch();
   return (
     <Navbar className="border-b-2">
       <Link
@@ -31,43 +35,48 @@ const Header = () => {
         <AiOutlineSearch />
       </Button>
       <div className="flex gap-2 md:order-2">
-        <Button className="w-12 h-10 hidden sm:inline" color="gray" pill>
-          <FaMoon />
+        <Button
+          className="w-12 h-10 hidden sm:inline"
+          color="gray"
+          pill
+          onClick={() => dispatch(toggleTheme())}
+        >
+          {theme === "light" ? <FaSun /> : <FaMoon />}
         </Button>
 
-        {
-          currentUser ?(  <img
-            src={currentUser.data.profilePic}
+        {currentUser ? (
+          <img
+            src={currentUser.profilePic || currentUser.data.profilePic}
             alt="profile"
             className="rounded-full h-10 w-10 object-cover self-center items-center"
-          />):(
-            <Link to="/sign-in">
+          />
+        ) : (
+          <Link to="/sign-in">
             <Button className="bg-gradient-to-r from-blue-500 to-green-500 ">
               Sign In
             </Button>
-          </Link >
-          )
-        }
-       
-     <Navbar.Toggle/>
+          </Link>
+        )}
+
+        <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
-          <Navbar.Link>
-            <Link to="/" active={path==="/"} as={'div'}>
-              Home
-            </Link>
-          </Navbar.Link>
-          <Navbar.Link>
-            <Link to="/about" active={path==="/about"} as={'div'} >
-              About
-            </Link>
-          </Navbar.Link>
-          <Navbar.Link>
-            <Link to="/projects" active={path==="/projects"} as={'div'}>
-              Projects
-            </Link>
-          </Navbar.Link>
-        </Navbar.Collapse>
+        <Navbar.Link>
+          <Link to="/" active={path === "/"} as={"div"}>
+            Home
+          </Link>
+        </Navbar.Link>
+        <Navbar.Link>
+          <Link to="/about" active={path === "/about"} as={"div"}>
+            About
+          </Link>
+        </Navbar.Link>
+        <Navbar.Link>
+          <Link to="/projects" active={path === "/projects"} as={"div"}>
+            Projects
+          </Link>
+        </Navbar.Link>
+      </Navbar.Collapse>
     </Navbar>
   );
 };

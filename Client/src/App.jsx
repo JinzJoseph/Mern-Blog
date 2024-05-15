@@ -7,21 +7,24 @@ import Projects from "./Pages/Projects";
 import Dashboard from "./Pages/Dashboard";
 import Header from "./Components/Header";
 import FooterCom from "./Components/Footer";
+import PrivateRoute from "./Components/PrivateRoute";
 
 function App() {
   return (
     <>
       <BrowserRouter>
-      <Header/>
+        <Header />
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/about" element={<About />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<Signup />} />
           <Route path="/projects" element={<Projects />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
         </Routes>
-        <FooterCom/>
+        <FooterCom />
       </BrowserRouter>
     </>
   );

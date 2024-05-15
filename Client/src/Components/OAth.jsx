@@ -31,8 +31,14 @@ const OAth = () => {
         }
       );
       console.log(res);
-      dispatch(signInSuccess(res.data));
-      navigate("/");
+      if (res.data.success === false) {
+        dispatch(signInFailure(data.message))
+      }
+      // setLoading(false);
+      if (res.statusText==="OK") {
+        dispatch(signInSuccess(res.data));
+        navigate("/");
+      }
     } catch (error) {
       console.log(error);
     }
