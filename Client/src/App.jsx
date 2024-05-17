@@ -9,7 +9,7 @@ import Header from "./Components/Header";
 import FooterCom from "./Components/Footer";
 import PrivateRoute from "./Components/PrivateRoute";
 import CreatePost from "./Pages/CreatePost";
-
+import AdminPrivateRoute from "./Components/AdminPrivateRoute";
 function App() {
   return (
     <>
@@ -24,7 +24,9 @@ function App() {
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
           </Route>
-          <Route path="/create-post" element={<CreatePost />} />
+          <Route element={<AdminPrivateRoute />}>
+            <Route path="/create-post" element={<CreatePost />} />
+          </Route>
         </Routes>
         <FooterCom />
       </BrowserRouter>
