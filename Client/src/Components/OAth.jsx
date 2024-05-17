@@ -35,7 +35,8 @@ const OAth = () => {
       if (res.data.success === false) {
         dispatch(signInFailure(res.data.message))
       }
-      const data=res.data.data
+      const data=res.data.rest
+      console.log(data);
       // setLoading(false);
       if (res.statusText==="OK") {
         dispatch(signInSuccess(data));

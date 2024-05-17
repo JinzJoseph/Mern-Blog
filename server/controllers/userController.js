@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 
 export const updateUser = async (req, res) => {
   console.log(req.params);
-console.log(req.user.id);
+  console.log(req.user.id);
   if (req.user.id !== req.params.userId) {
     return res.status(403).json({
       message: "You are not allowed to update this user",
@@ -50,6 +50,7 @@ console.log(req.user.id);
   }
 
   try {
+   
     const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
       {
@@ -72,10 +73,7 @@ console.log(req.user.id);
 
     const { password, ...rest } = updatedUser.toObject();
 
-    return res.status(200).json({
-      user: rest,
-      success: true,
-    });
+    return res.status(200).json(rest);
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -85,4 +83,25 @@ console.log(req.user.id);
   }
 };
 
-
+export const deleteUser = async (req, res, next) => {
+  //console.log(req.params.id);
+  if (req.user.id !== req.params.id)
+    return res.status(401).json({
+      message: "You can only delete your own account",
+      success: false,
+    });
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.clearCookie("access_token"); // Corrected method name to clearCookie
+    res.status(200).json({
+      message: "User has been successfully deleted",
+      success: true,
+    });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({
+      message: "Server Error",
+      success: false,
+    });
+  }
+};

@@ -89,9 +89,7 @@ export const googleAuth = async (req, res) => {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
       const { password, ...rest } = user._doc;
       res.cookie("access_token", token, { httpOnly: true }).status(200).json({
-        message: "successful",
-        success: true,
-        data: rest,
+         rest,
       });
     } else {
       const generatePassword =
@@ -110,9 +108,9 @@ export const googleAuth = async (req, res) => {
       await newUser.save();
       const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
       const { password, ...rest } = newUser._doc;
-      res.cookie("access_token", token, { httpOnly: true }).status(200).json({
+      res.cookie("access_token", token, { httpOnly: true }).status(200).json(
         rest,
-      });
+      );
     }
   } catch (error) {
     res.status(500).json({
@@ -121,3 +119,16 @@ export const googleAuth = async (req, res) => {
     });
   }
 };
+export const signout=async(req,res,next)=>{
+  console.log("hallo");
+  try {
+    res.clearCookie('access_token')
+    res.status(200).json({
+      message:"User has been logged out",
+      success:true
+    })
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ error: 'Server Error' });
+  }
+}
