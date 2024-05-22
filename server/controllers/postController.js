@@ -63,7 +63,7 @@ export const getpost = async (req, res) => {
       .skip(startIndex)
       .limit(limit);
     const totalPosts = await Post.countDocuments();
- // Calculate the date one month ago from the current date
+    // Calculate the date one month ago from the current date
     const now = new Date();
     const oneMothAgo = new Date(
       now.getFullYear(),
@@ -77,6 +77,55 @@ export const getpost = async (req, res) => {
       posts,
       totalPosts,
       lastMonthPosts,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
+  }
+};
+export const deletePost = async (req, res) => {
+  if (req.user.id !== req.params.userId) {
+    res.status(403).json({
+      message: "you are not allowed take these action",
+      success: false,
+    });
+  }
+  try {
+    await Post.findByIdAndDelete(req.params.postId);
+    res.status(200).json("The post has been deleted");
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
+  }
+};
+export const updatePost = async (req, res) => {
+  console.log(req.body);
+  if (req.user.id !== req.params.userId) {
+    return res.status(403).json({
+      message: "you are not allowed to update this post",
+    });
+  }
+  try {
+    const updatedPost = await Post.findByIdAndUpdate(
+      req.params.postId,
+      {
+        $set: {
+          title: req.body.formData.title,
+          content: req.body.formData.content,
+          category: req.body.formData.category,
+          image: req.body.formData.image,
+        },
+      },
+      { new: true }
+    );
+    res.status(200).json({
+      data: updatedPost,
+      success: true,
+      message:"succesfully updated"
     });
   } catch (error) {
     return res.status(500).json({
