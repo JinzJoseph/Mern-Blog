@@ -1,10 +1,22 @@
+import axios from "axios";
 import { Sidebar } from "flowbite-react";
 import React, { useEffect, useState } from "react";
-import { HiUser, HiArrowSmRight, HiDocumentText } from "react-icons/hi";
+import {
+  HiUser,
+  HiArrowSmRight,
+  HiDocumentText,
+
+} from "react-icons/hi";
+import {
+
+  signoutSuccess,
+} from "../redux/User/UserSlice";
+import { HiOutlineUserGroup } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
-
+import { useDispatch } from "react-redux";
 const DashSideBar = () => {
+  const dispatch=useDispatch()
   const [tab, SetTab] = useState("");
   const { currentUser } = useSelector((state) => state.user);
   const location = useLocation();
@@ -14,7 +26,19 @@ const DashSideBar = () => {
     console.log(TabFromuRL);
     SetTab(TabFromuRL);
   }, [location.search]);
+  const handleSignout = async () => {
+    try {
+      const res = await axios.post("/api/auth/signout",  {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
+      dispatch(signoutSuccess());
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <Sidebar className="w-full md:w-56">
       <Sidebar.Items>
@@ -42,8 +66,20 @@ const DashSideBar = () => {
               </Sidebar.Item>
             </Link>
           )}
+          {currentUser.isAdmin && (
+            <Link to="/dashboard?tab=users">
+              <Sidebar.Item
+                labelColors="dark"
+                icon={HiOutlineUserGroup}
+                as="div"
+                active={tab === "users"}
+              >
+                users
+              </Sidebar.Item>
+            </Link>
+          )}
 
-          <Sidebar.Item icon={HiArrowSmRight} className="cursor-pointer">
+          <Sidebar.Item icon={HiArrowSmRight} className="cursor-pointer" onClick={handleSignout}>
             Sign out
           </Sidebar.Item>
         </Sidebar.ItemGroup>

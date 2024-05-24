@@ -50,7 +50,6 @@ export const updateUser = async (req, res) => {
   }
 
   try {
-   
     const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
       {
@@ -85,7 +84,7 @@ export const updateUser = async (req, res) => {
 
 export const deleteUser = async (req, res, next) => {
   //console.log(req.params.id);
-  if (req.user.id !== req.params.id)
+  if ( req.user.isAdmin===false  && req.user.id !== req.params.id)
     return res.status(401).json({
       message: "You can only delete your own account",
       success: false,
@@ -96,6 +95,51 @@ export const deleteUser = async (req, res, next) => {
     res.status(200).json({
       message: "User has been successfully deleted",
       success: true,
+    });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({
+      message: "Server Error",
+      success: false,
+    });
+  }
+};
+export const getusers = async (req, res) => {
+  console.log("nall");
+
+  if (req.user.isAdmin===false) {
+    return res.status(403).json("you are not allowed to take these action")
+    
+  }
+  try {
+    const startIndex = parseInt(req.query.startIndex) || 0;
+    const limit = parseInt(req.query.limit) || 9;
+    const sortDirection = req.query.sort === "asc" ? 1 : -1;
+
+    const users = await User.find()
+      .sort({ createdAt: sortDirection })
+      .skip(startIndex)
+      .limit(limit);
+
+    const userWithoutPassword = users.map((user) => {
+      const { password, ...rest } = user._doc;
+      return rest;
+    });
+
+    const totalUsers = await User.countDocuments();
+    const now = new Date();
+    const oneMonthAgo = new Date(
+      now.getFullYear(),
+      now.getMonth() - 1,
+      now.getDate()
+    );
+    const lastMonthUsers = await User.countDocuments({
+      createdAt: { $gte: oneMonthAgo },
+    });
+    res.status(200).json({
+      userWithoutPassword,
+      totalUsers,
+      lastMonthUsers,
     });
   } catch (error) {
     console.error(error.message);
