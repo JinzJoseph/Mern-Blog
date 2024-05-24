@@ -105,7 +105,7 @@ export const deleteUser = async (req, res, next) => {
   }
 };
 export const getusers = async (req, res) => {
-  console.log("nall");
+
 
   if (req.user.isAdmin===false) {
     return res.status(403).json("you are not allowed to take these action")

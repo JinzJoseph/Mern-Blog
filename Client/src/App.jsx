@@ -25,12 +25,13 @@ function App() {
           <Route path="/projects" element={<Projects />} />
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/post" element={<Postpage />} />
+       
           </Route>
           <Route element={<AdminPrivateRoute />}>
             <Route path="/create-post" element={<CreatePost />} />
             <Route path="/update-post/:id" element={<UpdatedPost />} />
           </Route>
+          <Route path="/post/:slugId" element={<Postpage />} />
         </Routes>
         <FooterCom />
       </BrowserRouter>
