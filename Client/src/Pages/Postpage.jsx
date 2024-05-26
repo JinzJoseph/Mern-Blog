@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Spinner } from "flowbite-react";
 import { Link, useParams } from "react-router-dom";
 import CallToAction from "../Components/CallToAction";
+import CommentSection from "../Components/CommentSection";
 
 const Postpage = () => {
   const { slugId } = useParams();
@@ -14,8 +15,8 @@ const Postpage = () => {
       try {
         SetLoading(false);
         const res = await axios.get(`/api/post/getpost?slug=${slugId}`);
-        console.log(res);
-        console.log(res.data.posts[0]);
+        // console.log(res);
+        // console.log(res.data.posts[0]);
         if (!res.statusText === "OK") {
           SetLoading(false);
           SetError(true);
@@ -48,11 +49,12 @@ const Postpage = () => {
       </h1>
       <Link
         to={`/search?category=${post && post?.category}`}
-        className="self-center mt-5"
+        className="self-center mt-5 "
       >
         <Button color="gray" pill size="xs">
           {post && post.category}
         </Button>
+        </Link>
         <img
           src={post && post.image}
           alt={post && post.title}
@@ -69,9 +71,10 @@ const Postpage = () => {
           dangerouslySetInnerHTML={{ __html: post && post.content }}
         ></div>
         <div className="max-w-4xl mx-auto w-full">
-          <CallToAction />
+          <CallToAction  />
         </div>
-      </Link>
+        <CommentSection postId={post._id}/>
+      
     </main>
   );
 };

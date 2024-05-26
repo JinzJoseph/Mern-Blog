@@ -7,7 +7,7 @@ const CallToAction = () => {
       <div className="flex-1 justify-center flex flex-col">
         <h2 className="text-2xl"> Want to learn more About JavaScript?</h2>
         <p className=" text-gray-500 my-2" > Checkout these resource with 100 javascript projects</p>
-        <Button className="">
+        <Button className="bg-gradient-to-r from-blue-500 to-green-500">
         100 JavaScript Projects
         </Button>
       </div>
