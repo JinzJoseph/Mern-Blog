@@ -5,6 +5,7 @@ import {
   HiUser,
   HiArrowSmRight,
   HiDocumentText,
+  HiAnnotation,
 
 } from "react-icons/hi";
 import {
@@ -75,6 +76,18 @@ const DashSideBar = () => {
                 active={tab === "users"}
               >
                 users
+              </Sidebar.Item>
+            </Link>
+          )}
+            {currentUser.isAdmin && (
+            <Link to="/dashboard?tab=comments">
+              <Sidebar.Item
+                labelColors="dark"
+                icon={HiAnnotation}
+                as="div"
+                active={tab === "comments"}
+              >
+                comments
               </Sidebar.Item>
             </Link>
           )}

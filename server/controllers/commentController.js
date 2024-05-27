@@ -101,7 +101,7 @@ export const deleteComment = async (req, res) => {
   try {
     const comment = await Comment.findById(req.params.commentId);
     if (!comment) {
-    return  res.status(404).json("Comment is not found...");
+      return res.status(404).json("Comment is not found...");
     }
     if (req.user.id !== comment.userId && req.user.isAdmin === false) {
       returnres.status(403).json("you are not allowed to delete these comment");
@@ -110,6 +110,40 @@ export const deleteComment = async (req, res) => {
     res.status(200).json("Comment has been deleted");
   } catch (error) {
     console.error(error);
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
+  }
+};
+export const getcomments = async (req, res) => {
+  if (req.user.isAdmin === false) {
+    return res.status(403).json("you are not allowed to get all comments");
+  }
+  try {
+    const startIndex = req.query.startIndex || 0;
+    const limit = req.query.limit || 9;
+    const sortDirection = req.query.sort === "desc" ? -1 : 1;
+    const comments = await Comment.find()
+      .sort({ createdAt: sortDirection })
+      .skip(startIndex)
+      .limit(limit);
+    const totalComments = await Comment.countDocuments();
+    const now = new Date();
+    const oneMonthAgo = new Date(
+      now.getFullYear(),
+      now.getMonth() - 1,
+      now.getDate()
+    );
+    const lastMonthComments = await Comment.countDocuments({
+      createdAt: { $gte: oneMonthAgo },
+    });
+    res.status(200).json({
+      comments,
+      totalComments,
+      lastMonthComments,
+    });
+  } catch (error) {
     return res.status(500).json({
       message: "Internal server error",
       success: false,
