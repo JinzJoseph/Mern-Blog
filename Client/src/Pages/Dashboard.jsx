@@ -5,6 +5,7 @@ import DashProfile from "../Components/DashProfile";
 import DashPost from "../Components/DashPost";
 import UserList from "./UserList";
 import CommentsList from "../Components/CommentsList";
+import AdminDash from "../Components/AdminDash";
 const Dashboard = () => {
   const [tab, SetTab] = useState("");
   const location = useLocation();
@@ -32,6 +33,8 @@ const Dashboard = () => {
       {tab === "users" && <UserList />}
       {/* comments */}
       {tab==="comments" && <CommentsList/> }
+      {/* dash of admin */}
+      { tab==="dash" && <AdminDash/>}
     </div>
   );
 };
