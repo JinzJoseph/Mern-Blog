@@ -12,6 +12,7 @@ import CreatePost from "./Pages/CreatePost";
 import AdminPrivateRoute from "./Components/AdminPrivateRoute";
 import UpdatedPost from "./Pages/UpdatedPost";
 import Postpage from "./Pages/Postpage";
+import Search from "./Pages/Search";
 function App() {
   return (
     <>
@@ -23,6 +24,7 @@ function App() {
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<Signup />} />
           <Route path="/projects" element={<Projects />} />
+          <Route path='/search' element={<Search />} />
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
        

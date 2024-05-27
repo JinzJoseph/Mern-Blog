@@ -1,5 +1,5 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react";
@@ -10,15 +10,16 @@ import axios from "axios";
 
 const Header = () => {
   const path = useLocation().pathname;
+  const navigate = useNavigate();
   const location = useLocation();
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
   const dispatch = useDispatch();
-
+  const [searchTerm, SetSearchTerm] = useState("");
 
   const handleSignout = async () => {
     try {
-      const res = await axios.post("/api/auth/signout",  {
+      const res = await axios.post("/api/auth/signout", {
         headers: {
           "Content-Type": "application/json",
         },
@@ -28,6 +29,20 @@ const Header = () => {
     } catch (error) {
       console.log(error.message);
     }
+  };
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    if (searchTermFromUrl) {
+      SetSearchTerm(searchTermFromUrl);
+    }
+  }, [location.search]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set("searchTerm", searchTerm);
+    const searchQuery = urlParams.toString();
+    navigate(`/search?${searchQuery}`);
   };
   return (
     <Navbar className="border-b-2">
@@ -40,12 +55,14 @@ const Header = () => {
         </span>
         Blog
       </Link>
-      <form className="sm:hidden lg:block ">
+      <form className="sm:hidden lg:block " onSubmit={handleSubmit}>
         <TextInput
           type="text"
           placeholder="Search..."
           rightIcon={AiOutlineSearch}
           className="lg:outline-none"
+          value={searchTerm}
+          onChange={(e) => SetSearchTerm(e.target.value)}
         ></TextInput>
       </form>
       <Button className="w-12 h-10 lg:hidden" color="gray" pill>
@@ -65,25 +82,26 @@ const Header = () => {
           <Dropdown
             arrowIcon={false}
             inline
-            label={
-              <Avatar alt='user' img={currentUser.profilePic} rounded />
-            }
+            label={<Avatar alt="user" img={currentUser.profilePic} rounded />}
           >
             <Dropdown.Header>
-              <span className='block text-sm'>@{currentUser.username}</span>
-              <span className='block text-sm font-medium truncate'>
+              <span className="block text-sm">@{currentUser.username}</span>
+              <span className="block text-sm font-medium truncate">
                 {currentUser.email}
               </span>
             </Dropdown.Header>
-            <Link to={'/dashboard?tab=profile'}>
+            <Link to={"/dashboard?tab=profile"}>
               <Dropdown.Item>Profile</Dropdown.Item>
             </Link>
             <Dropdown.Divider />
             <Dropdown.Item onClick={handleSignout}>Sign out</Dropdown.Item>
           </Dropdown>
         ) : (
-          <Link to='/sign-in'>
-            <Button className="bg-gradient-to-r from-blue-500 to-green-500  " outline>
+          <Link to="/sign-in">
+            <Button
+              className="bg-gradient-to-r from-blue-500 to-green-500  "
+              outline
+            >
               Sign In
             </Button>
           </Link>

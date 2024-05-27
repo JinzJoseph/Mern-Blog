@@ -39,6 +39,7 @@ export const createPost = async (req, res) => {
   }
 };
 export const getpost = async (req, res) => {
+  console.log(req.query);
   try {
     const startIndex = parseInt(req.query.startIndex) || 0;
     const limit = parseInt(req.query.limit) || 9;
@@ -50,12 +51,8 @@ export const getpost = async (req, res) => {
       ...(req.query.postId && { _id: req.query.postId }),
       ...(req.query.searchTerm && {
         $or: [
-          {
-            title: { $regex: req.query.searchTerm, $options: "i" },
-          },
-          {
-            content: { $regrex: req.query.searchTerm, $options: "i" },
-          },
+          { title: { $regex: req.query.searchTerm, $options: 'i' } },
+          { content: {$regex: req.query.searchTerm, $options: 'i' } },
         ],
       }),
     })
@@ -79,6 +76,7 @@ export const getpost = async (req, res) => {
       lastMonthPosts,
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: "Internal server error",
       success: false,
@@ -125,7 +123,7 @@ export const updatePost = async (req, res) => {
     res.status(200).json({
       data: updatedPost,
       success: true,
-      message:"succesfully updated"
+      message: "succesfully updated",
     });
   } catch (error) {
     return res.status(500).json({
